@@ -1,2 +1,2 @@
-# aprendendo-vue-e-firebase
-Aprendendo um pouco do firebase com o vuejs
+# avancando-com-e-rotas
+Dominando a configuração de rotas avançadas com vue, este é um repositório ligado ao meu curso de vuejs do zero ao avançado
