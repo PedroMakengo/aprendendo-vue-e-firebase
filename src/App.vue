@@ -32,10 +32,11 @@ export default {
       await firebase
         .firestore()
         .collection("posts")
-        .doc("123")
-        .set({ tarefa: this.posts.tarefa, autor: this.posts.autor })
+        .add({ tarefa: this.posts.tarefa, autor: this.posts.autor })
         .then(() => {
           console.log("Cadastrado com sucesso");
+          this.posts.autor = "";
+          this.posts.tarefa = "";
         })
         .catch(error => {
           console.log("Gerou alguém erro" + error);
