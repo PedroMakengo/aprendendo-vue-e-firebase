@@ -191,6 +191,18 @@ export default {
     async sair() {
       await firebase.auth().signOut();
     },
+
+    async entrar() {
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(this.user.email, this.user.senha)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
