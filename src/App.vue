@@ -1,13 +1,18 @@
 <template>
   <div class="app">
-    <div>
+    <div v-if="!userVerified">
       <h1>Cadastrar</h1>
       <label for="">E-mail:</label>
       <input type="text" v-model="user.email" /><br />
       <label for="">Senha:</label>
       <input type="password" v-model="user.senha" />
       <br />
-      <button @click="cadastrarUsuario">Cadastrar usuário</button>
+      <button @click="entrar">Login</button>
+    </div>
+    <div v-else>
+      <h1>Você está logado</h1>
+      <h2>E-mail: {{ user.email }}</h2>
+      <button @click="sair">Sair</button>
     </div>
 
     <hr />
@@ -61,10 +66,22 @@ export default {
         autor: "",
       },
       user: { email: "", senha: "" },
+      userVerified: false,
       posts: [],
     };
   },
   async created() {
+    await firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.userVerified = true;
+        this.user.email = user.email;
+      } else {
+        this.userVerified = false;
+        this.user.email = "";
+      }
+    });
+
+    // Trazer todos os posts e usando o olheiro
     await firebase
       .firestore()
       .collection("posts")
@@ -154,7 +171,6 @@ export default {
           console.log("Post deletado com sucesso");
         });
     },
-
     async cadastrarUsuario() {
       await firebase
         .auth()
@@ -171,6 +187,9 @@ export default {
             alert("E-mail já existe");
           }
         });
+    },
+    async sair() {
+      await firebase.auth().signOut();
     },
   },
 };
