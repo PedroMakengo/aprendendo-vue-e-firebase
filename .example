@@ -4,6 +4,20 @@
 //   await firebase.auth().signOut();
 // },
 
+// LOGIN
+
+// async entrar() {
+//   await firebase
+//     .auth()
+//     .signInWithEmailAndPassword(this.user.email, this.user.senha)
+//     .then(response => {
+//       console.log(response);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// },
+
 // CADASTRAR
 
 // async cadastrar() {
@@ -86,5 +100,33 @@
 //     .delete()
 //     .then(() => {
 //       console.log("Post deletado com sucesso");
+//     });
+// },
+
+// async created() {
+//   await firebase.auth().onAuthStateChanged(user => {
+//     if (user) {
+//       this.userVerified = true;
+//       this.user.email = user.email;
+//     } else {
+//       this.userVerified = false;
+//       this.user.email = "";
+//     }
+//   });
+
+//   // Trazer todos os posts e usando o olheiro
+//   await firebase
+//     .firestore()
+//     .collection("posts")
+//     .onSnapshot(doc => {
+//       this.posts = [];
+
+//       doc.forEach(item => {
+//         this.posts.push({
+//           id: item.id,
+//           tarefa: item.data().tarefa,
+//           autor: item.data().autor,
+//         });
+//       });
 //     });
 // },
