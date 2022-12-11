@@ -11,6 +11,12 @@
 
       <input type="submit" value="Cadastrar" />
     </form>
+
+    <button @click="buscarPosts">Buscar Posts</button>
+
+    <hr />
+    <h2>{{ posts.autor }}</h2>
+    <h2>{{ posts.tarefa }}</h2>
   </div>
 </template>
 
@@ -40,6 +46,20 @@ export default {
         })
         .catch(error => {
           console.log("Gerou alguém erro" + error);
+        });
+    },
+    async buscarPosts() {
+      await firebase
+        .firestore()
+        .collection("posts")
+        .doc("HDJaRW5wBpm5qYajeoXq")
+        .get()
+        .then(item => {
+          this.posts = item.data();
+          console.log(item.data().tarefa + item.data().autor);
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
   },
