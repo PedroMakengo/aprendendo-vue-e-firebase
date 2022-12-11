@@ -22,12 +22,13 @@
     <ul>
       <li v-for="(item, index) in posts" :key="index">
         Id: <strong>{{ item.id }}</strong>
+        <button @click="deletarPost(item.id)">Deletar Posts</button>
         <br />
         Tarefa: <strong>{{ item.tarefa }}</strong>
         <br />
         Autor:<strong>{{ item.autor }}</strong>
         <br />
-        <button @click="deletarPost(item.id)">Deletar Posts</button>
+
         <br />
         <br />
       </li>
@@ -131,8 +132,6 @@ export default {
         });
     },
     async deletarPost(id) {
-      if (id === "") return;
-
       await firebase
         .firestore()
         .collection("posts")
