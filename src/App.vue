@@ -16,6 +16,7 @@
     </form>
 
     <button @click="atualizarPost">Atualizar Posts</button>
+    <button @click="deletarPost">Deletar Posts</button>
     <button @click="buscarPosts">Buscar Posts</button>
 
     <hr />
@@ -126,6 +127,18 @@ export default {
           this.post.autor = "";
           this.post.tarefa = "";
           this.post.idPost = "";
+        });
+    },
+    async deletarPost() {
+      if (this.post.idPost === "") return;
+
+      await firebase
+        .firestore()
+        .collection("posts")
+        .doc(this.post.idPost)
+        .delete()
+        .then(() => {
+          console.log("Post deletado com sucesso");
         });
     },
   },
