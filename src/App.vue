@@ -15,6 +15,16 @@
       </select>
       <br />
       <button @click="cadastrarUsuario">Cadastrar</button>
+      <button @click="entrar">Login</button>
+    </div>
+
+    <hr />
+    <div v-if="userSearchLogin">
+      <h3>{{ userSearchLogin.email }}</h3>
+      <h3>{{ userSearchLogin.nome }}</h3>
+      <h3>
+        {{ userSearchLogin.type === "Admin" ? "Administrador(a)" : "Normal" }}
+      </h3>
     </div>
   </div>
 </template>
@@ -27,6 +37,7 @@ export default {
   data() {
     return {
       user: { email: "", senha: "", nome: "", type: "" },
+      userSearchLogin: null,
     };
   },
 
@@ -52,6 +63,28 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+
+    async entrar() {
+      const { user } = await firebase
+        .auth()
+        .signInWithEmailAndPassword(this.user.email, this.user.senha);
+
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get()
+        .then(snapshot => {
+          this.userSearchLogin = {
+            nome: snapshot.data().nome,
+            type: snapshot.data().type,
+            email: user.email,
+          };
+        });
+
+      this.user.email = "";
+      this.user.senha = "";
     },
   },
 };
