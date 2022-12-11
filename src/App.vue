@@ -4,10 +4,10 @@
 
     <form @submit.prevent="cadastrar">
       <label for="">Tarefa:</label>
-      <input type="text" v-model="posts.tarefa" /> <br />
+      <input type="text" v-model="post.tarefa" /> <br />
 
       <label for="Autor">Autor</label>
-      <input type="text" v-model="posts.autor" /> <br />
+      <input type="text" v-model="post.autor" /> <br />
 
       <input type="submit" value="Cadastrar" />
     </form>
@@ -15,8 +15,16 @@
     <button @click="buscarPosts">Buscar Posts</button>
 
     <hr />
-    <h2>{{ posts.autor }}</h2>
-    <h2>{{ posts.tarefa }}</h2>
+    <div>
+      <div v-for="(item, index) in posts" :key="index">
+        <span
+          >Tarefa: <strong>{{ item.tarefa }}</strong></span
+        >
+        <p>
+          Autor: <strong>{{ item.autor }}</strong>
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,10 +35,11 @@ export default {
   name: "App",
   data() {
     return {
-      posts: {
+      post: {
         tarefa: "",
         autor: "",
       },
+      posts: [],
     };
   },
   methods: {
@@ -38,25 +47,44 @@ export default {
       await firebase
         .firestore()
         .collection("posts")
-        .add({ tarefa: this.posts.tarefa, autor: this.posts.autor })
+        .add({ tarefa: this.post.tarefa, autor: this.post.autor })
         .then(() => {
           console.log("Cadastrado com sucesso");
-          this.posts.autor = "";
-          this.posts.tarefa = "";
+          this.post.autor = "";
+          this.post.tarefa = "";
         })
         .catch(error => {
           console.log("Gerou alguém erro" + error);
         });
     },
     async buscarPosts() {
+      this.posts = [];
+      // await firebase
+      //   .firestore()
+      //   .collection("posts")
+      //   .doc("HDJaRW5wBpm5qYajeoXq")
+      //   .get()
+      //   .then(item => {
+      //     this.posts = item.data();
+      //     console.log(item.data().tarefa + item.data().autor);
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
+
+      // Buscar todos os posts
       await firebase
         .firestore()
         .collection("posts")
-        .doc("HDJaRW5wBpm5qYajeoXq")
         .get()
         .then(item => {
-          this.posts = item.data();
-          console.log(item.data().tarefa + item.data().autor);
+          item.forEach(doc => {
+            this.posts.push({
+              id: doc.id,
+              tarefa: doc.data().tarefa,
+              autor: doc.data().autor,
+            });
+          });
         })
         .catch(error => {
           console.log(error);
