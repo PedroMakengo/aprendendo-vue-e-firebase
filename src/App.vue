@@ -16,7 +16,6 @@
     </form>
 
     <button @click="atualizarPost">Atualizar Posts</button>
-    <button @click="deletarPost">Deletar Posts</button>
     <button @click="buscarPosts">Buscar Posts</button>
 
     <hr />
@@ -27,6 +26,8 @@
         Tarefa: <strong>{{ item.tarefa }}</strong>
         <br />
         Autor:<strong>{{ item.autor }}</strong>
+        <br />
+        <button @click="deletarPost(item.id)">Deletar Posts</button>
         <br />
         <br />
       </li>
@@ -129,13 +130,13 @@ export default {
           this.post.idPost = "";
         });
     },
-    async deletarPost() {
-      if (this.post.idPost === "") return;
+    async deletarPost(id) {
+      if (id === "") return;
 
       await firebase
         .firestore()
         .collection("posts")
-        .doc(this.post.idPost)
+        .doc(id)
         .delete()
         .then(() => {
           console.log("Post deletado com sucesso");
