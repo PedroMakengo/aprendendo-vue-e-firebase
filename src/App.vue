@@ -98,79 +98,6 @@ export default {
       });
   },
   methods: {
-    async cadastrar() {
-      await firebase
-        .firestore()
-        .collection("posts")
-        .add({ tarefa: this.post.tarefa, autor: this.post.autor })
-        .then(() => {
-          console.log("Cadastrado com sucesso");
-          this.post.autor = "";
-          this.post.tarefa = "";
-        })
-        .catch(error => {
-          console.log("Gerou alguém erro" + error);
-        });
-    },
-    async buscarPosts() {
-      this.posts = [];
-      // await firebase
-      //   .firestore()
-      //   .collection("posts")
-      //   .doc("HDJaRW5wBpm5qYajeoXq")
-      //   .get()
-      //   .then(item => {
-      //     this.posts = item.data();
-      //     console.log(item.data().tarefa + item.data().autor);
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
-
-      // Buscar todos os posts
-      await firebase
-        .firestore()
-        .collection("posts")
-        .get()
-        .then(item => {
-          item.forEach(doc => {
-            this.posts.push({
-              id: doc.id,
-              tarefa: doc.data().tarefa,
-              autor: doc.data().autor,
-            });
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    async atualizarPost() {
-      await firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.post.idPost)
-        .update({
-          tarefa: this.post.tarefa,
-          autor: this.post.autor,
-        })
-        .then(() => {
-          console.log("Atualizado com sucesso");
-          this.post.autor = "";
-          this.post.tarefa = "";
-          this.post.idPost = "";
-        });
-    },
-    async deletarPost(id) {
-      await firebase
-        .firestore()
-        .collection("posts")
-        .doc(id)
-        .delete()
-        .then(() => {
-          console.log("Post deletado com sucesso");
-        });
-    },
     async cadastrarUsuario() {
       await firebase
         .auth()
@@ -187,9 +114,6 @@ export default {
             alert("E-mail já existe");
           }
         });
-    },
-    async sair() {
-      await firebase.auth().signOut();
     },
 
     async entrar() {
