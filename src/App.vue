@@ -1,8 +1,19 @@
 <template>
   <div class="app">
-    <h1>Aprendendo Vuejs + Firebase</h1>
+    <div>
+      <h1>Cadastrar</h1>
+      <label for="">E-mail:</label>
+      <input type="text" v-model="user.email" /><br />
+      <label for="">Senha:</label>
+      <input type="password" v-model="user.senha" />
+      <br />
+      <button @click="cadastrarUsuario">Cadastrar usuário</button>
+    </div>
+
+    <hr />
 
     <form @submit.prevent="cadastrar">
+      <h1>Adicionando tarefas</h1>
       <label for="">Id:</label>
       <input type="text" v-model="post.idPost" /> <br />
 
@@ -19,6 +30,7 @@
     <button @click="buscarPosts">Buscar Posts</button>
 
     <hr />
+    <h1>Listando tarefas</h1>
     <ul>
       <li v-for="(item, index) in posts" :key="index">
         Id: <strong>{{ item.id }}</strong>
@@ -48,6 +60,7 @@ export default {
         tarefa: "",
         autor: "",
       },
+      user: { email: "", senha: "" },
       posts: [],
     };
   },
@@ -139,6 +152,24 @@ export default {
         .delete()
         .then(() => {
           console.log("Post deletado com sucesso");
+        });
+    },
+
+    async cadastrarUsuario() {
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.user.email, this.user.senha)
+        .then(() => {
+          this.user.email = "";
+          this.user.senha = "";
+        })
+        .catch(error => {
+          console.log("Error" + error);
+          if (error.code === "auth/weak-password") {
+            alert("Senha Muito Fraca");
+          } else if (error.code === "auth/credencial-already-in-use") {
+            alert("E-mail já existe");
+          }
         });
     },
   },
