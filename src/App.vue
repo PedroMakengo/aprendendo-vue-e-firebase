@@ -42,6 +42,25 @@ export default {
       posts: [],
     };
   },
+  async created() {
+    this.posts = [];
+    await firebase
+      .firestore()
+      .collection("posts")
+      .get()
+      .then(item => {
+        item.forEach(doc => {
+          this.posts.push({
+            id: doc.id,
+            tarefa: doc.data().tarefa,
+            autor: doc.data().autor,
+          });
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
   methods: {
     async cadastrar() {
       await firebase
